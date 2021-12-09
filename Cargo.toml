@@ -1,0 +1,19 @@
+[package]
+name = "llibres"
+version = "0.1.0"
+authors = ["Miquel Sabaté Solà <mikisabate@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+chrono = { version = "0.4", features = ["serde"] }
+dotenv = "0.11"
+diesel = { version = "1.4.8", features = ["postgres", "r2d2", "uuidv07", "chrono"] }
+diesel_migrations = "1.4"
+lazy_static = "1.4"
+serde = { version = "1.0.130", features = ["derive"] }
+serde_json = "1.0.72"
+r2d2 = "0.8"
+uuid = { version = "0.8", features = ["serde", "v4"] }
+dropshot = "0.6"
+schemars = { version = "0.8.8", features = ["chrono", "uuid"] }
+tokio = { version = "1.14.0", features = ["full"] }
