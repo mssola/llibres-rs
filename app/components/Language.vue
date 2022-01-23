@@ -115,6 +115,10 @@
     <!-- delete -->
     <span id="msg.en.delete">Delete</span>
     <span id="msg.ca.delete">Elimina</span>
+
+    <!-- confirm -->
+    <span id="msg.en.confirm">Are you sure about this?</span>
+    <span id="msg.ca.confirm">Estàs segur d'això?</span>
   </div>
 </template>
 

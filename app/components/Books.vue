@@ -334,9 +334,23 @@ export default {
     },
 
     deleteBook(book) {
-      console.log(book);
+      if (window.confirm(i18n.t("confirm"))) {
+        // TODO: handle error
+        axios({
+          method: "DELETE",
+          url: `/books/${book.id}`,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }).then(() => {
+          let idx = this.books.findIndex((el) => el.id === book.id);
+          if (idx >= 0) {
+            this.books.splice(idx, 1);
+          }
 
-      this.isModalVisible = false;
+          this.isModalVisible = false;
+        });
+      }
     },
   },
 };
