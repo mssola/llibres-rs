@@ -21,7 +21,10 @@
         <section class="modal-body" id="modalDescription">
           <table class="min-w-full table-auto">
             <tr>
-              <td class="w-fit"><b>Title</b>:</td>
+              <td class="w-fit">
+                <b>{{ i18n.t("title") }}</b
+                >:
+              </td>
               <td class="w-full" v-if="editing">
                 <input v-model="b.title" class="min-w-full" type="text" />
               </td>
@@ -29,7 +32,10 @@
             </tr>
 
             <tr>
-              <td class="w-fit"><b>Inside of</b>:</td>
+              <td class="w-fit">
+                <b>{{ i18n.t("insideofup") }}</b
+                >:
+              </td>
               <td class="w-full" v-if="editing">
                 <input v-model="b.supertitle" class="min-w-full" type="text" />
               </td>
@@ -39,7 +45,10 @@
             </tr>
 
             <tr>
-              <td class="w-fit"><b>Publisher</b>:</td>
+              <td class="w-fit">
+                <b>{{ i18n.t("publisher") }}</b
+                >:
+              </td>
               <td class="w-full" v-if="editing">
                 <input v-model="b.publisher" class="min-w-full" type="text" />
               </td>
@@ -47,7 +56,10 @@
             </tr>
 
             <tr>
-              <td class="w-fit"><b>Language</b>:</td>
+              <td class="w-fit">
+                <b>{{ i18n.t("language") }}</b
+                >:
+              </td>
               <td v-if="editing">
                 <input v-model="b.language" type="text" />
               </td>
@@ -55,7 +67,10 @@
             </tr>
 
             <tr>
-              <td class="w-fit"><b>Location</b>:</td>
+              <td class="w-fit">
+                <b>{{ i18n.t("location") }}</b
+                >:
+              </td>
               <td v-if="editing">
                 <input v-model="b.location" type="text" />
               </td>
@@ -63,7 +78,10 @@
             </tr>
 
             <tr>
-              <td class="w-fit"><b>Rate</b>:</td>
+              <td class="w-fit">
+                <b>{{ i18n.t("rate") }}</b
+                >:
+              </td>
               <td v-if="editing">
                 <input
                   v-model="b.rate"
@@ -77,7 +95,10 @@
             </tr>
 
             <tr>
-              <td class="w-fit"><b>Status</b>:</td>
+              <td class="w-fit">
+                <b>{{ i18n.t("status") }}</b
+                >:
+              </td>
               <td v-if="editing">
                 <select
                   v-model="b.status"
@@ -96,7 +117,10 @@
             </tr>
 
             <tr>
-              <td class="w-fit"><b>Kind</b>:</td>
+              <td class="w-fit">
+                <b>{{ i18n.t("kind") }}</b
+                >:
+              </td>
               <td v-if="editing">
                 <select
                   v-model="b.kind"
@@ -122,7 +146,7 @@
             class="font-semibold py-2 px-4 rounded cursor-pointer bg-blue-500 text-white border border-blue-700 hover:bg-blue-700"
             @click="$emit('updateBook', b)"
           >
-            Update
+            {{ i18n.t("update") }}
           </button>
 
           <button
@@ -130,7 +154,7 @@
             class="font-semibold py-2 px-4 rounded bg-white text-gray-800 border border-gray-400 hover:bg-gray-100"
             @click="editing = true"
           >
-            Edit
+            {{ i18n.t("edit") }}
           </button>
 
           <button
@@ -138,7 +162,7 @@
             class="font-semibold py-2 px-4 rounded cursor-pointer bg-white text-red-800 border border-red-700 hover:bg-red-700 hover:border-red-700 hover:text-white"
             @click="editing = false"
           >
-            Cancel
+            {{ i18n.t("cancel") }}
           </button>
 
           <button
@@ -146,7 +170,7 @@
             class="font-semibold py-2 px-4 rounded cursor-pointer bg-white text-red-800 border border-red-700 hover:bg-red-700 hover:border-red-700 hover:text-white"
             @click="$emit('deleteBook', book)"
           >
-            Delete
+            {{ i18n.t("delete") }}
           </button>
         </footer>
       </div>
@@ -157,6 +181,7 @@
 <script>
 import books from "../utils/books";
 import types from "../utils/types";
+import i18n from "../utils/i18n";
 
 export default {
   name: "Modal",
@@ -168,6 +193,7 @@ export default {
     return {
       statuses: books.STATUSES,
       kinds: books.KINDS,
+      i18n: i18n,
       editing: false,
       b: { ...this.book },
     };

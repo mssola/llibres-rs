@@ -11,7 +11,7 @@
                 type="text"
                 class="rounded border border-gray-400 px-2 py-1"
                 v-model="filter"
-                placeholder="Filter.."
+                :placeholder="`${i18n.t('filter')}...`"
               />
             </div>
 
@@ -22,28 +22,28 @@
                   v-bind:key="val"
                   v-bind:value="val"
                 >
-                  {{ key }}
+                  {{ i18n.t(key) }}
                 </option>
               </select>
             </div>
 
             <div>
               <select v-model="kind">
-                <option :value="-1">Not specified</option>
+                <option :value="-1">{{ i18n.t("notspecified") }}</option>
                 <option
                   v-for="(val, key) in kinds"
                   v-bind:key="val"
                   v-bind:value="val"
                 >
-                  {{ key }}
+                  {{ i18n.t(key) }}
                 </option>
               </select>
             </div>
 
             <div>
               <select v-model="sortingAlgorithm">
-                <option value="0">Sort by interest</option>
-                <option value="1">Sort by addition date</option>
+                <option value="0">{{ i18n.t("sortbyinterest") }}</option>
+                <option value="1">{{ i18n.t("sortbydate") }}</option>
               </select>
             </div>
 
@@ -52,7 +52,7 @@
                 class="font-semibold py-2 px-4 rounded cursor-pointer bg-green-500 text-white border border-green-700 hover:bg-green-700"
                 @click="page = NEW"
               >
-                Create
+                {{ i18n.t("new") }}
               </button>
             </div>
           </div>
@@ -61,9 +61,9 @@
         <div class="max-w-sm md:max-w-5xl">
           <table>
             <tr class="border-b border-gray-400">
-              <th>Kind</th>
-              <th>Title</th>
-              <th>Author</th>
+              <th>{{ i18n.t("kind") }}</th>
+              <th>{{ i18n.t("title") }}</th>
+              <th>{{ i18n.t("author") }}</th>
             </tr>
 
             <tr v-for="book in filterList()" :key="book.id">
@@ -72,27 +72,27 @@
                   <div
                     v-if="book.kind == kinds.none"
                     class="w-2 h-2 border border-gray-400 rounded-full"
-                    title="General"
+                    :title="`${i18n.t('none')}`"
                   ></div>
                   <div
                     v-else-if="book.kind == kinds.poetry"
                     class="w-2 h-2 border border-gray-400 bg-yellow-400 rounded-full"
-                    title="Poesia"
+                    :title="`${i18n.t('poetry')}`"
                   ></div>
                   <div
                     v-else-if="book.kind == kinds.theater"
                     class="w-2 h-2 border border-gray-400 bg-purple-400 rounded-full"
-                    title="Teatre"
+                    :title="`${i18n.t('theater')}`"
                   ></div>
                   <div
                     v-else-if="book.kind == kinds.essay"
                     class="w-2 h-2 border border-gray-400 bg-red-400 rounded-full"
-                    title="Assaig"
+                    :title="`${i18n.t('essay')}`"
                   ></div>
                   <div
                     v-else-if="book.kind == kinds.shorts"
                     class="w-2 h-2 border border-gray-400 bg-blue-400 rounded-full"
-                    title="Contes"
+                    :title="`${i18n.t('shorts')}`"
                   ></div>
                 </div>
               </td>
@@ -138,6 +138,7 @@ import NewBook from "./NewBook.vue";
 import Modal from "./Modal.vue";
 import types from "../utils/types";
 import ubooks from "../utils/books";
+import i18n from "../utils/i18n";
 
 const INDEX = 0;
 const NEW = 1;
@@ -161,14 +162,7 @@ export default {
       statuses: ubooks.STATUSES,
       kinds: ubooks.KINDS,
       sortingAlgorithm: 0,
-      languages: {
-        ca: "Catalan",
-        es: "Spanish",
-        en: "English",
-        grc: "Ancient Greek",
-        la: "Latin",
-        it: "Italian",
-      },
+      i18n: i18n,
       filter: "",
       status: ubooks.STATUSES.notread,
       kind: -1,
@@ -221,7 +215,7 @@ export default {
       if (types.isblank(book.supertitle)) {
         return book.title;
       }
-      return `${book.title} (inside of '${book.supertitle}')`;
+      return `${book.title} (${i18n.t("insideof")} '${book.supertitle}')`;
     },
 
     bookSort(b1, b2) {
@@ -300,20 +294,6 @@ export default {
         return `0${n}`;
       }
       return n;
-    },
-
-    present_languages(lang) {
-      return lang
-        .split(",")
-        .map((l) => {
-          let v = this.languages[l.trim()];
-
-          if (types.isblank(v)) {
-            return "";
-          }
-          return v;
-        })
-        .join(", ");
     },
 
     showDescription(book) {

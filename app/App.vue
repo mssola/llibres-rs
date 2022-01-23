@@ -1,6 +1,7 @@
 <template>
   <div>
     <Flash v-if="kind != ''" :message="sanitizedMessage" :kind="kind"></Flash>
+    <Language></Language>
     <Books @flash="flash"></Books>
   </div>
 </template>
@@ -8,12 +9,14 @@
 <script>
 import Books from "./components/Books.vue";
 import Flash from "./components/Flash.vue";
+import Language from "./components/Language.vue";
 
 export default {
   name: "App",
   components: {
     Books,
     Flash,
+    Language,
   },
 
   data() {
