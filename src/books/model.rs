@@ -14,9 +14,9 @@ use dropshot::HttpError;
 /// Book represents a book in our database.
 ///
 /// Note that for `kind` we could be using a fancy enum, but that would require
-/// doing funny things around `diesel` or adding some fishy boilerplate. Instead,
-/// since we realistally only have one client, we allow the client to make sense
-/// of this integer.
+/// doing funny things around `diesel` or adding some fishy boilerplate.
+/// Instead, since we will only have one client, we allow the client to make
+/// sense of this integer.
 #[derive(Serialize, Deserialize, Queryable, Insertable, QueryableByName, PartialEq, JsonSchema)]
 #[table_name = "books"]
 pub struct Book {

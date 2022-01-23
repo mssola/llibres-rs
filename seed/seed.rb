@@ -10,6 +10,7 @@ NONE = 0
 POETRY = 1
 THEATER = 2
 ESSAY = 3
+SHORTS = 4
 
 # Statuses
 READ = 0
@@ -37,13 +38,13 @@ def check_mandatory!(book)
 end
 
 def parse_kind!(title, kind)
-  raise StandardError "'#{title}': given kind '#{kind}' is not valid!" unless KNOWN_KINDS.include?(kind)
+  raise StandardError, "'#{title}': given kind '#{kind}' is not valid!" unless KNOWN_KINDS.include?(kind)
 
   Object.const_get(kind.upcase)
 end
 
 def parse_status!(title, status)
-  raise StandardError "'#{title}': given status '#{status}' is not valid!" unless KNOWN_STATUSES.include?(status)
+  raise StandardError, "'#{title}': given status '#{status}' is not valid!" unless KNOWN_STATUSES.include?(status)
 
   Object.const_get(status.upcase)
 end

@@ -70,6 +70,10 @@
     <div class="field">
       <button @click="createBook">Create</button>
     </div>
+
+    <div class="field">
+      <button @click="$emit('close')">Cancel</button>
+    </div>
   </div>
 </template>
 

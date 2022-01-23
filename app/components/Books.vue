@@ -1,24 +1,131 @@
 <template>
   <div>
     <div v-if="page == INDEX">
-      <button @click="page = NEW">NEW</button>
+      <div class="grid justify-center">
+        <div class="max-w-sm md:max-w-5xl">
+          <div
+            class="filter grid grid-flow-col auto-cols-max gap-2 justify-left"
+          >
+            <div>
+              <input
+                type="text"
+                class="rounded border border-gray-400 px-2 py-1"
+                v-model="filter"
+                placeholder="Filter.."
+              />
+            </div>
 
-      <table>
-        <tr>
-          <th>Title</th>
-          <th>Author</th>
-        </tr>
+            <div>
+              <select v-model="status">
+                <option
+                  v-for="(val, key) in statuses"
+                  v-bind:key="val"
+                  v-bind:value="val"
+                >
+                  {{ key }}
+                </option>
+              </select>
+            </div>
 
-        <tr v-for="book in books" :key="book.id">
-          <td>{{ title_plus_super(book) }}</td>
-          <td>{{ nullable(book.author) }}</td>
-        </tr>
-      </table>
+            <div>
+              <select v-model="kind">
+                <option :value="-1">Not specified</option>
+                <option
+                  v-for="(val, key) in kinds"
+                  v-bind:key="val"
+                  v-bind:value="val"
+                >
+                  {{ key }}
+                </option>
+              </select>
+            </div>
+
+            <div>
+              <select v-model="sortingAlgorithm">
+                <option value="0">Sort by interest</option>
+                <option value="1">Sort by addition date</option>
+              </select>
+            </div>
+
+            <div>
+              <button
+                class="font-semibold py-2 px-4 rounded cursor-pointer bg-green-500 text-white border border-green-700 hover:bg-green-700"
+                @click="page = NEW"
+              >
+                Create
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="max-w-sm md:max-w-5xl">
+          <table>
+            <tr class="border-b border-gray-400">
+              <th>Kind</th>
+              <th>Title</th>
+              <th>Author</th>
+            </tr>
+
+            <tr v-for="book in filterList()" :key="book.id">
+              <td>
+                <div class="flex items-center justify-center">
+                  <div
+                    v-if="book.kind == kinds.none"
+                    class="w-2 h-2 border border-gray-400 rounded-full"
+                    title="General"
+                  ></div>
+                  <div
+                    v-else-if="book.kind == kinds.poetry"
+                    class="w-2 h-2 border border-gray-400 bg-yellow-400 rounded-full"
+                    title="Poesia"
+                  ></div>
+                  <div
+                    v-else-if="book.kind == kinds.theater"
+                    class="w-2 h-2 border border-gray-400 bg-purple-400 rounded-full"
+                    title="Teatre"
+                  ></div>
+                  <div
+                    v-else-if="book.kind == kinds.essay"
+                    class="w-2 h-2 border border-gray-400 bg-red-400 rounded-full"
+                    title="Assaig"
+                  ></div>
+                  <div
+                    v-else-if="book.kind == kinds.shorts"
+                    class="w-2 h-2 border border-gray-400 bg-blue-400 rounded-full"
+                    title="Contes"
+                  ></div>
+                </div>
+              </td>
+              <td
+                class="px-4 py-1 text-left cursor-pointer"
+                @click="showDescription(book)"
+              >
+                {{ title_plus_super(book) }}
+              </td>
+              <td
+                class="px-2 py-1 text-left cursor-pointer"
+                @click="showDescription(book)"
+              >
+                {{ nullable(book.author) }}
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <Modal
+        v-if="isModalVisible"
+        :book="this.selectedBook"
+        @close="isModalVisible = false"
+        @updateBook="updateBook"
+        @deleteBook="deleteBook"
+      ></Modal>
     </div>
     <div v-else-if="page == NEW">
       <NewBook
         @flash="flash"
         @created="created"
+        @close="page = INDEX"
         :completion="completion"
       ></NewBook>
     </div>
@@ -28,7 +135,9 @@
 <script>
 import axios from "axios";
 import NewBook from "./NewBook.vue";
+import Modal from "./Modal.vue";
 import types from "../utils/types";
+import ubooks from "../utils/books";
 
 const INDEX = 0;
 const NEW = 1;
@@ -38,6 +147,7 @@ export default {
 
   components: {
     NewBook,
+    Modal,
   },
 
   data() {
@@ -48,6 +158,9 @@ export default {
       locations: new Set(),
       INDEX: INDEX,
       NEW: NEW,
+      statuses: ubooks.STATUSES,
+      kinds: ubooks.KINDS,
+      sortingAlgorithm: 0,
       languages: {
         ca: "Catalan",
         es: "Spanish",
@@ -56,6 +169,11 @@ export default {
         la: "Latin",
         it: "Italian",
       },
+      filter: "",
+      status: ubooks.STATUSES.notread,
+      kind: -1,
+      isModalVisible: false,
+      selectedBook: null,
     };
   },
 
@@ -106,6 +224,57 @@ export default {
       return `${book.title} (inside of '${book.supertitle}')`;
     },
 
+    bookSort(b1, b2) {
+      if (this.sortingAlgorithm === 0) {
+        if (b1.rate === b2.rate) {
+          return b1.title
+            .toLocaleLowerCase()
+            .localeCompare(b2.title.toLocaleLowerCase());
+        }
+        return b1.rate - b2.rate;
+      }
+
+      if (b1.bought_at === b2.bought_at && !types.isnull(b1)) {
+        return b1.title
+          .toLocaleLowerCase()
+          .localeCompare(b2.title.toLocaleLowerCase());
+      }
+      return b1.bought_at > b2.bought_at;
+    },
+
+    filterList() {
+      return this.books
+        .filter((book) => {
+          if (this.status !== book.status) {
+            return false;
+          }
+          if (this.kind >= 0 && this.kind !== book.kind) {
+            return false;
+          }
+
+          if (types.isblank(this.filter)) {
+            return true;
+          }
+          return (
+            book.title
+              .toLocaleLowerCase()
+              .includes(this.filter.toLocaleLowerCase()) ||
+            book.author
+              .toLocaleLowerCase()
+              .includes(this.filter.toLocaleLowerCase())
+          );
+        })
+        .sort(this.bookSort);
+    },
+
+    filterBy(status) {
+      return this.books
+        .filter((book) => {
+          return book.status === status;
+        })
+        .sort(this.bookSort);
+    },
+
     nullable(str) {
       if (types.isblank(str)) {
         return "-";
@@ -145,6 +314,49 @@ export default {
           return v;
         })
         .join(", ");
+    },
+
+    showDescription(book) {
+      this.selectedBook = book;
+      this.isModalVisible = true;
+    },
+
+    updateBook(book) {
+      // TODO: handle error
+      axios({
+        method: "PUT",
+        url: `/books/${book.id}`,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: {
+          title: book.title,
+          supertitle: book.supertitle,
+          rate: book.rate,
+          status: book.status,
+          location: book.location,
+          author: book.author,
+          publisher: book.publisher,
+          language: book.language,
+          notes: book.notes,
+          kind: book.kind,
+          bought_at: book.bought_at,
+        },
+      }).then(() => {
+        for (let i = 0; i < this.books.length; i++) {
+          if (this.books[i].id === book.id) {
+            this.books[i] = { ...book };
+          }
+        }
+
+        this.isModalVisible = false;
+      });
+    },
+
+    deleteBook(book) {
+      console.log(book);
+
+      this.isModalVisible = false;
     },
   },
 };

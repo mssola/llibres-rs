@@ -37,7 +37,7 @@ impl<'de> de::Visitor<'de> for NaiveDateTimeVisitor {
     type Value = NaiveDateTime;
 
     fn expecting(&self, formatter: &mut fmt::Formatter) -> fmt::Result {
-        write!(formatter, "a string represents chrono::NaiveDateTime")
+        write!(formatter, "a string representing a valid datetime")
     }
 
     fn visit_str<E>(self, s: &str) -> Result<Self::Value, E>
@@ -78,14 +78,15 @@ where
 
 /// Deserializer for Option<chrono::NaiveDateTime> attributes. This is similar
 /// to its chrono::NaiveDateTime counterpart but with the Option<NaiveDateTime>
-/// wrapping.
+/// wrapping. In case of a parsing error, it simply returns a valid result with
+/// None.
 pub fn from_optional_datetime<'de, D>(d: D) -> Result<Option<NaiveDateTime>, D::Error>
 where
     D: de::Deserializer<'de>,
 {
     match d.deserialize_str(NaiveDateTimeVisitor) {
         Ok(v) => Ok(Some(v)),
-        Err(v) => Err(v),
+        Err(_) => Ok(None),
     }
 }
 
