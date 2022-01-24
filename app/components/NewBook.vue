@@ -82,6 +82,7 @@ import "vue-select/dist/vue-select.css";
 import axios from "axios";
 import vSelect from "vue-select";
 import types from "../utils/types";
+import i18n from "../utils/i18n";
 
 export default {
   name: "NewBook",
@@ -138,6 +139,7 @@ export default {
         method: "POST",
         url: `/books`,
         headers: {
+          "Accept-Language": i18n.currentLanguage,
           "Content-Type": "application/json",
           Accept: "application/json",
         },

@@ -3,6 +3,7 @@
 // found in `setCurrentLanguage` then it will be applied anyways.
 const SUPPORTED = ["ca", "en"];
 
+// Language for the application.
 let currentLanguage = "en";
 
 // Fetches the language as requested by the browser and sets the internal
@@ -17,6 +18,11 @@ const setCurrentLanguage = () => {
   currentLanguage = langs.find((l) => SUPPORTED.includes(l)) || "en";
 };
 
+// Returns the code for the current language.
+const getLanguage = () => {
+  return currentLanguage;
+};
+
 // Returns the translated value for the given key. This is done by trying to
 // fetch an element by an ID with an agreed format. Make sure that it exists. If
 // it's not found, then they key is simply returned, which is ugly, but at least
@@ -29,4 +35,5 @@ const t = (key) => {
 export default {
   t,
   setCurrentLanguage,
+  getLanguage,
 };

@@ -78,10 +78,9 @@ impl Book {
             .get_result::<Book>(&conn)
         {
             Ok(v) => Ok(v.id),
-            // TODO: more fine-grained
             Err(_e) => Err(HttpError::for_bad_request(
                 None,
-                String::from("wabalubadubub"),
+                String::from("something went wrong"),
             )),
         }
     }
@@ -99,10 +98,9 @@ impl Book {
             .get_result(&conn)
         {
             Ok(v) => Ok(v),
-            // TODO: more fine-grained
             Err(_e) => Err(HttpError::for_bad_request(
                 None,
-                String::from("wabalubadubub"),
+                String::from("something went wrong"),
             )),
         }
     }
@@ -113,10 +111,9 @@ impl Book {
 
         match diesel::delete(books::table.filter(books::id.eq(uid))).execute(&conn) {
             Ok(v) => Ok(v),
-            // TODO: more fine-grained
             Err(_e) => Err(HttpError::for_bad_request(
                 None,
-                String::from("wabalubadubub"),
+                String::from("something went wrong"),
             )),
         }
     }

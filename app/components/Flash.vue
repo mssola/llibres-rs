@@ -1,5 +1,7 @@
 <template>
-  <div class="flash" v-bind:class="flashClass">{{ displayMessage }}</div>
+  <div class="flash" v-bind:class="flashClass">
+    {{ displayMessage }}
+  </div>
 </template>
 
 <script>

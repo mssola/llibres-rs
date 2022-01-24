@@ -1,6 +1,11 @@
 <template>
   <div>
-    <Flash v-if="kind != ''" :message="sanitizedMessage" :kind="kind"></Flash>
+    <Flash
+      @click="kind = ''"
+      v-if="kind != ''"
+      :message="sanitizedMessage"
+      :kind="kind"
+    ></Flash>
     <Language></Language>
     <Books @flash="flash"></Books>
   </div>

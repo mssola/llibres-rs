@@ -302,11 +302,11 @@ export default {
     },
 
     updateBook(book) {
-      // TODO: handle error
       axios({
         method: "PUT",
         url: `/books/${book.id}`,
         headers: {
+          "Accept-Language": i18n.getLanguage(),
           "Content-Type": "application/json",
         },
         data: {
@@ -322,15 +322,28 @@ export default {
           kind: book.kind,
           bought_at: book.bought_at,
         },
-      }).then(() => {
-        for (let i = 0; i < this.books.length; i++) {
-          if (this.books[i].id === book.id) {
-            this.books[i] = { ...book };
+      })
+        .then(() => {
+          for (let i = 0; i < this.books.length; i++) {
+            if (this.books[i].id === book.id) {
+              this.books[i] = { ...book };
+            }
           }
-        }
 
-        this.isModalVisible = false;
-      });
+          this.isModalVisible = false;
+        })
+        .catch((error) => {
+          this.isModalVisible = false;
+
+          if (error.response.status === 400) {
+            this.flash(
+              "error",
+              `${i18n.t("error")}: ${error.response.data.message}.`
+            );
+          } else {
+            this.flash("error", `${i18n.t("error")}!`);
+          }
+        });
     },
 
     deleteBook(book) {
@@ -340,16 +353,22 @@ export default {
           method: "DELETE",
           url: `/books/${book.id}`,
           headers: {
+            "Accept-Language": i18n.getLanguage(),
             "Content-Type": "application/json",
           },
-        }).then(() => {
-          let idx = this.books.findIndex((el) => el.id === book.id);
-          if (idx >= 0) {
-            this.books.splice(idx, 1);
-          }
+        })
+          .then(() => {
+            let idx = this.books.findIndex((el) => el.id === book.id);
+            if (idx >= 0) {
+              this.books.splice(idx, 1);
+            }
 
-          this.isModalVisible = false;
-        });
+            this.isModalVisible = false;
+          })
+          .catch(() => {
+            this.isModalVisible = false;
+            this.flash("error", `${i18n.t("error")}!`);
+          });
       }
     },
   },

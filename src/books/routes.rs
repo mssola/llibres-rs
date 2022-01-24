@@ -8,6 +8,7 @@ use dropshot::{
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::sync::Arc;
+use crate::books::{lang_from_context, t};
 
 /// Parameters as expected from the path of these endpoints.
 #[derive(Deserialize, JsonSchema)]
@@ -31,14 +32,18 @@ async fn index(
     path = "/books",
 }]
 async fn create(
-    _ctx: Arc<RequestContext<()>>,
+    ctx: Arc<RequestContext<()>>,
     body: TypedBody<BookRequest>
 ) -> Result<dropshot::HttpResponseCreated<Uuid>, HttpError> {
+    let lang = lang_from_context(ctx).await;
     let body = body.into_inner();
-    validate_request(&body)?;
+    validate_request(&body, lang.as_str())?;
 
-    let book = Book::create(body)?;
-    Ok(HttpResponseCreated(book))
+    let book = Book::create(body);
+    match book {
+        Ok(v) => Ok(HttpResponseCreated(v)),
+        Err(_) => Err(HttpError::for_bad_request(None, t(lang.as_str(), "unknown"))),
+    }
 }
 
 #[endpoint {
@@ -46,15 +51,19 @@ async fn create(
     path = "/books/{id}",
 }]
 async fn update(
-    _ctx: Arc<RequestContext<()>>,
+    ctx: Arc<RequestContext<()>>,
     path: Path<PathParams>,
     body: TypedBody<BookRequest>
 ) -> Result<dropshot::HttpResponseUpdatedNoContent, HttpError> {
+    let lang = lang_from_context(ctx).await;
     let body = body.into_inner();
-    validate_request(&body)?;
+    validate_request(&body, lang.as_str())?;
 
-    Book::update(path.into_inner().id, body)?;
-    Ok(HttpResponseUpdatedNoContent())
+    match Book::update(path.into_inner().id, body) {
+        Ok(_) => Ok(HttpResponseUpdatedNoContent()),
+        Err(_) => Err(HttpError::for_bad_request(None, t(lang.as_str(), "unknown"))),
+    }
+
 }
 
 #[endpoint {
@@ -62,16 +71,17 @@ async fn update(
     path = "/books/{id}",
 }]
 async fn delete(
-    _ctx: Arc<RequestContext<()>>,
+    ctx: Arc<RequestContext<()>>,
     path: Path<PathParams>
 ) -> Result<dropshot::HttpResponseDeleted, HttpError> {
+    let lang = lang_from_context(ctx).await;
     let res = Book::delete(path.into_inner().id);
 
     match res {
-        Ok(0) => Err(HttpError::for_not_found(None, String::from("not found"))),
+        Ok(0) => Err(HttpError::for_not_found(None, t(lang.as_str(), "notfound"))),
         Ok(1) => Ok(HttpResponseDeleted()),
-        Ok(_) => Err(HttpError::for_not_found(None, String::from("not found"))),
-        Err(_) => Err(HttpError::for_bad_request(None, String::from("oops"))),
+        Ok(_) => Err(HttpError::for_not_found(None, t(lang.as_str(), "notfound"))),
+        Err(_) => Err(HttpError::for_bad_request(None, t(lang.as_str(), "oops"))),
     }
 }
 
@@ -85,26 +95,26 @@ pub fn draw(api: &mut ApiDescription<()>) {
 
 /// Validate a given book request. This should work either for `create` or
 /// `update`.
-fn validate_request(br: &BookRequest) -> Result<(), HttpError> {
+fn validate_request(br: &BookRequest, lang: &str) -> Result<(), HttpError> {
     if br.title.trim().is_empty() {
-        return Err(HttpError::for_bad_request(None, String::from("empty title")));
+        return Err(HttpError::for_bad_request(None, t(lang, "emptytitle")));
     }
     if br.publisher.trim().is_empty() {
-        return Err(HttpError::for_bad_request(None, String::from("empty publisher")));
+        return Err(HttpError::for_bad_request(None, t(lang, "emptypublisher")));
     }
     if br.language.trim().is_empty() {
-        return Err(HttpError::for_bad_request(None, String::from("empty language")));
+        return Err(HttpError::for_bad_request(None, t(lang, "emptylanguage")));
     }
     if br.rate < 0 || br.rate > 10 {
-        return Err(HttpError::for_bad_request(None, String::from("bad rating")));
+        return Err(HttpError::for_bad_request(None, t(lang, "badrating")));
     }
     if br.status < 0 || br.status > 5 {
-        return Err(HttpError::for_bad_request(None, String::from("bad status")));
+        return Err(HttpError::for_bad_request(None, t(lang, "badstatus")));
     }
     match br.kind {
         Some(v) => {
             if v < 0 || v > 4 {
-                return Err(HttpError::for_bad_request(None, String::from("bad kind")));
+                return Err(HttpError::for_bad_request(None, t(lang, "badkind")));
             }
         },
         None => ()

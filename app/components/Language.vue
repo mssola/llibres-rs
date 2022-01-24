@@ -119,6 +119,10 @@
     <!-- confirm -->
     <span id="msg.en.confirm">Are you sure about this?</span>
     <span id="msg.ca.confirm">Estàs segur d'això?</span>
+
+    <!-- error -->
+    <span id="msg.en.error">Something went wrong</span>
+    <span id="msg.ca.error">Alguna cosa ha anat malament</span>
   </div>
 </template>
 
