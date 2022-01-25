@@ -1,7 +1,7 @@
-use lazy_static::lazy_static;
-use std::sync::Arc;
-use std::collections::HashMap;
 use dropshot::RequestContext;
+use lazy_static::lazy_static;
+use std::collections::HashMap;
+use std::sync::Arc;
 
 lazy_static! {
     // Hash of strings for translations.
@@ -78,6 +78,6 @@ pub fn t(lang: &str, key: &'static str) -> String {
             Some(v) => String::from(*v),
             None => String::from(""),
         },
-        None => String::from("")
+        None => String::from(""),
     }
 }

@@ -23,7 +23,7 @@ const ABBREV_FORMAT: &str = "%Y-%m-%d %H:%M:%S";
 /// Given an abbreviated-formatted string, append to it a default time if it
 /// doesn't have any. The end result should always match `ABBREV_FORMAT`.
 fn corrected_time(s: &str) -> String {
-    if s.contains(":") {
+    if s.contains(':') {
         s.to_owned()
     } else {
         format!("{} 00:00:00", s)

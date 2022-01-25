@@ -5,14 +5,14 @@ extern crate diesel_migrations;
 
 use dotenv::dotenv;
 use dropshot::{
-    ApiDescription, ConfigDropshot, ConfigLogging, ConfigLoggingLevel, HttpServerStarter
+    ApiDescription, ConfigDropshot, ConfigLogging, ConfigLoggingLevel, HttpServerStarter,
 };
 use std::env;
 
-mod db;
-mod schema;
 mod books;
+mod db;
 mod health;
+mod schema;
 pub mod visitor;
 
 #[tokio::main]
@@ -25,7 +25,7 @@ async fn main() -> Result<(), String> {
 
     // Specifying the configuration for dropshot, which simply binds to a given
     // port and assigns a maximum value for the request body.
-    let port = env::var("LLIBRES_PORT").unwrap_or(String::from("8080"));
+    let port = env::var("LLIBRES_PORT").unwrap_or_else(|_| String::from("8080"));
     let config: ConfigDropshot = ConfigDropshot {
         bind_address: format!("0.0.0.0:{}", port).parse().unwrap(),
         request_body_max_bytes: 1024,
@@ -48,6 +48,6 @@ async fn main() -> Result<(), String> {
     // empty one should suffice.
     HttpServerStarter::new(&config, api, (), &log)
         .map_err(|error| format!("failed to create server: {}", error))?
-    .start()
-    .await
+        .start()
+        .await
 }

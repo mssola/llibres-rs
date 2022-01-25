@@ -1,14 +1,13 @@
+use crate::books::{lang_from_context, t};
 use crate::books::{Book, BookRequest};
-use uuid::Uuid;
 use dropshot::{
-    ApiDescription, RequestContext, endpoint, HttpError, HttpResponseOk,
-    HttpResponseCreated, HttpResponseUpdatedNoContent, HttpResponseDeleted,
-    TypedBody, Path
+    endpoint, ApiDescription, HttpError, HttpResponseCreated, HttpResponseDeleted, HttpResponseOk,
+    HttpResponseUpdatedNoContent, Path, RequestContext, TypedBody,
 };
 use schemars::JsonSchema;
 use serde::Deserialize;
 use std::sync::Arc;
-use crate::books::{lang_from_context, t};
+use uuid::Uuid;
 
 /// Parameters as expected from the path of these endpoints.
 #[derive(Deserialize, JsonSchema)]
@@ -20,9 +19,7 @@ struct PathParams {
     method = GET,
     path = "/books",
 }]
-async fn index(
-    _ctx: Arc<RequestContext<()>>
-) -> Result<HttpResponseOk<Vec<Book>>, HttpError> {
+async fn index(_ctx: Arc<RequestContext<()>>) -> Result<HttpResponseOk<Vec<Book>>, HttpError> {
     let books = Book::all()?;
     Ok(HttpResponseOk(books))
 }
@@ -33,7 +30,7 @@ async fn index(
 }]
 async fn create(
     ctx: Arc<RequestContext<()>>,
-    body: TypedBody<BookRequest>
+    body: TypedBody<BookRequest>,
 ) -> Result<dropshot::HttpResponseCreated<Uuid>, HttpError> {
     let lang = lang_from_context(ctx).await;
     let body = body.into_inner();
@@ -42,7 +39,10 @@ async fn create(
     let book = Book::create(body);
     match book {
         Ok(v) => Ok(HttpResponseCreated(v)),
-        Err(_) => Err(HttpError::for_bad_request(None, t(lang.as_str(), "unknown"))),
+        Err(_) => Err(HttpError::for_bad_request(
+            None,
+            t(lang.as_str(), "unknown"),
+        )),
     }
 }
 
@@ -53,7 +53,7 @@ async fn create(
 async fn update(
     ctx: Arc<RequestContext<()>>,
     path: Path<PathParams>,
-    body: TypedBody<BookRequest>
+    body: TypedBody<BookRequest>,
 ) -> Result<dropshot::HttpResponseUpdatedNoContent, HttpError> {
     let lang = lang_from_context(ctx).await;
     let body = body.into_inner();
@@ -61,9 +61,11 @@ async fn update(
 
     match Book::update(path.into_inner().id, body) {
         Ok(_) => Ok(HttpResponseUpdatedNoContent()),
-        Err(_) => Err(HttpError::for_bad_request(None, t(lang.as_str(), "unknown"))),
+        Err(_) => Err(HttpError::for_bad_request(
+            None,
+            t(lang.as_str(), "unknown"),
+        )),
     }
-
 }
 
 #[endpoint {
@@ -72,7 +74,7 @@ async fn update(
 }]
 async fn delete(
     ctx: Arc<RequestContext<()>>,
-    path: Path<PathParams>
+    path: Path<PathParams>,
 ) -> Result<dropshot::HttpResponseDeleted, HttpError> {
     let lang = lang_from_context(ctx).await;
     let res = Book::delete(path.into_inner().id);
@@ -111,13 +113,10 @@ fn validate_request(br: &BookRequest, lang: &str) -> Result<(), HttpError> {
     if br.status < 0 || br.status > 5 {
         return Err(HttpError::for_bad_request(None, t(lang, "badstatus")));
     }
-    match br.kind {
-        Some(v) => {
-            if v < 0 || v > 4 {
-                return Err(HttpError::for_bad_request(None, t(lang, "badkind")));
-            }
-        },
-        None => ()
+    if let Some(v) = br.kind {
+        if !(0..=4).contains(&v) {
+            return Err(HttpError::for_bad_request(None, t(lang, "badkind")));
+        }
     }
 
     Ok(())
