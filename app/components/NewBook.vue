@@ -19,8 +19,12 @@
 
     <div class="field">
       <label for="status">Status</label>
-      <select v-model="status">
-        <option v-for="st in statuses" v-bind:key="st.key">
+      <select id="status" v-model="status">
+        <option
+          v-for="st in statuses"
+          v-bind:key="st.key"
+          v-bind:value="st.key"
+        >
           {{ st.text }}
         </option>
       </select>
@@ -55,7 +59,7 @@
 
     <div class="field">
       <label for="kind">Kind</label>
-      <select v-model="kind">
+      <select id="kind" v-model="kind">
         <option v-for="k in kinds" v-bind:key="k.key" v-bind:value="k.value">
           {{ k.key }}
         </option>
@@ -68,7 +72,7 @@
     </div>
 
     <div class="field">
-      <button @click="createBook">Create</button>
+      <button id="create" @click="createBook">Create</button>
     </div>
 
     <div class="field">
@@ -133,6 +137,8 @@ export default {
         author: types.isblank(this.author) ? "" : this.author.trim(),
         notes: this.notes.trim(),
         kind: this.kind,
+        publisher: "To be done",
+        language: "To be done",
         bought_at: new Date(this.date).toISOString(),
       };
       axios({

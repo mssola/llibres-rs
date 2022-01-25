@@ -7,12 +7,20 @@ The backend resides in the `src` directory and is written in
 something with Rust). In order to run it, just get into that directory and run:
 
 ```sh
+$ diesel setup # Just for the very first time
 $ cargon run
 ```
 
 This should take care of everything and the server will be running at port
 `8080`. If you really want to use another port for whatever reason, you can set
 the `LLIBRES_PORT` environment variable beforehand.
+
+You can then seed the database with test data by running:
+
+```sh
+# Or wherever you backend server is running.
+$ ruby tests/fixtures/seed.rb tests/fixtures/test.yml http://localhost:8080
+```
 
 ## Frontend
 
@@ -30,7 +38,29 @@ web browser and visit `localhost:5000`.
 
 ## Running tests
 
-To do.
+I am basically only running end-to-end tests, since this application is small
+and easy enough and I just need to test a couple of workflows. In order to
+achieve this, you need to start the backend and fill the database with some test
+data. One easy way to achieve this is to create a `test` database and feed the
+test data that I have in `tests/fixtures`. This can be done with:
+
+```sh
+# Or whatever name you want to give to the database.
+$ DATABASE_URL=postgres://localhost/llibres-test diesel setup
+$ DATABASE_URL=postgres://localhost/llibres-test cargo run
+```
+
+And then you can start the [cypress](https://www.cypress.io/) process from
+another terminal:
+
+```sh
+$ yarn test:e2e
+```
+
+From there you should be able to run tests from the web GUI.
+
+These tests will be automatically run for every pull request and commit in the
+Github actions set up for this project..
 
 ## Issue reporting
 

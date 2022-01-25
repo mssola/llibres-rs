@@ -143,6 +143,7 @@
         <footer class="modal-footer">
           <button
             v-if="editing"
+            id="update"
             class="font-semibold py-2 px-4 rounded cursor-pointer bg-blue-500 text-white border border-blue-700 hover:bg-blue-700"
             @click="$emit('updateBook', b)"
           >
@@ -151,6 +152,7 @@
 
           <button
             v-else
+            id="edit"
             class="font-semibold py-2 px-4 rounded bg-white text-gray-800 border border-gray-400 hover:bg-gray-100"
             @click="editing = true"
           >
@@ -159,6 +161,7 @@
 
           <button
             v-if="editing"
+            id="cancel"
             class="font-semibold py-2 px-4 rounded cursor-pointer bg-white text-red-800 border border-red-700 hover:bg-red-700 hover:border-red-700 hover:text-white"
             @click="editing = false"
           >
@@ -167,6 +170,7 @@
 
           <button
             v-else
+            id="delete"
             class="font-semibold py-2 px-4 rounded cursor-pointer bg-white text-red-800 border border-red-700 hover:bg-red-700 hover:border-red-700 hover:text-white"
             @click="$emit('deleteBook', book)"
           >

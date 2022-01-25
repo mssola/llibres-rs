@@ -56,8 +56,10 @@ lazy_static! {
 // requires `await`.
 pub async fn lang_from_context(ctx: Arc<RequestContext<()>>) -> String {
     let request = ctx.request.lock().await;
-    let lang = &request.headers()["accept-language"];
-    let lang = lang.to_str().unwrap_or("en");
+    let lang = match &request.headers().get("accept-language") {
+        Some(v) => v.to_str().unwrap_or("en"),
+        None => "en",
+    };
 
     for it in SUPPORTED_LANGUAGES.iter() {
         let s: &'static str = it;

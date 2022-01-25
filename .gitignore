@@ -13,4 +13,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
-seed/seed.yml
+# Stuff from tests
+tests/fixtures/seed.yml
+tests/e2e/screenshots/*
+tests/e2e/videos/*

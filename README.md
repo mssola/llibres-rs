@@ -11,8 +11,8 @@ A simple web application to manage the books I have or want.
 
 - [ ] UI
 - [ ] Improve NewBook component
-- [ ] Tests
-- [ ] Github shenanigans
+- [x] Tests
+- [x] Github shenanigans
 
 ## Contributing
 

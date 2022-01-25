@@ -8,6 +8,7 @@
           >
             <div>
               <input
+                id="filter"
                 type="text"
                 class="rounded border border-gray-400 px-2 py-1"
                 v-model="filter"
@@ -16,7 +17,7 @@
             </div>
 
             <div>
-              <select v-model="status">
+              <select id="status" v-model="status">
                 <option
                   v-for="(val, key) in statuses"
                   v-bind:key="val"
@@ -28,7 +29,7 @@
             </div>
 
             <div>
-              <select v-model="kind">
+              <select id="kind" v-model="kind">
                 <option :value="-1">{{ i18n.t("notspecified") }}</option>
                 <option
                   v-for="(val, key) in kinds"
@@ -49,6 +50,7 @@
 
             <div>
               <button
+                id="new-book"
                 class="font-semibold py-2 px-4 rounded cursor-pointer bg-green-500 text-white border border-green-700 hover:bg-green-700"
                 @click="page = NEW"
               >

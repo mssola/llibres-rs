@@ -1,0 +1,41 @@
+# Fixtures used for e2e testing.
+
+- title: 'book1'
+  location: 'location1'
+  author: 'Name Lastname'
+  kind: 'poetry'
+  status: 'read'
+  language: 'ca'
+  publisher: 'Some publisher'
+  notes: 'Insightful note'
+  rate: 7
+
+- title: 'book2'
+  location: 'location1'
+  author: 'Another Lastname'
+  kind: 'essay'
+  status: 'notread'
+  language: 'ca'
+  publisher: 'Some publisher'
+  notes: 'Insightful note'
+  rate: 6
+
+- title: 'book3'
+  location: 'location1'
+  author: 'Another Lastname'
+  kind: 'essay'
+  status: 'read'
+  language: 'ca'
+  publisher: 'Some publisher'
+  notes: 'Insightful note'
+  rate: 6
+
+- title: 'book4'
+  location: 'location1'
+  author: 'Another Lastname'
+  kind: 'poetry'
+  status: 'read'
+  language: 'ca'
+  publisher: 'Some publisher'
+  notes: 'Insightful note'
+  rate: 6

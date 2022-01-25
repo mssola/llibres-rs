@@ -61,11 +61,11 @@ end
 ##
 # Make some preliminary checks before moving on.
 
-books = YAML.load_file('seed.yml')
+raise StandardError, 'ruby seed.rb <file.yml> <url>' if ARGV.size != 2
 
-raise StandardError, 'You have to give me exactly one argument, the URL of the API' if ARGV.size != 1
+books = YAML.load_file(ARGV.first)
 
-uri = URI.parse(ARGV.first)
+uri = URI.parse(ARGV.last)
 uri.path = '/health'
 res = Net::HTTP.get_response(uri)
 raise StandardError, "Got a '#{res.code}' when talking with the server..." unless res.is_a?(Net::HTTPSuccess)
@@ -73,11 +73,39 @@ raise StandardError, "Got a '#{res.code}' when talking with the server..." unles
 ##
 # Make sure that the user knows what he/she is doing.
 
-print 'Have you updated your database? [Y/n] '
-resp = $stdin.gets.chomp
-unless resp == '' || resp.downcase == 'y'
-  puts 'bye!'
-  exit 0
+if blank?(ENV['CI'])
+  print 'This will clear whatever it was in your database before, are you sure? [Y/n] '
+  resp = $stdin.gets.chomp
+  unless resp == '' || resp.downcase == 'y'
+    puts 'bye!'
+    exit 0
+  end
+end
+
+##
+# Nuke whatever it was before.
+
+uri = URI.parse(ARGV.last)
+uri.path = '/books'
+res = Net::HTTP.get_response(uri)
+if res.code != '200'
+  puts 'Something went wrong, check your server!'
+  exit 1
+end
+
+ids = JSON.parse(res.body).map { |h| h['id'] }.compact
+puts 'Clearing existing rows...' unless ids.empty?
+
+ids.each do |id|
+  uri = URI.parse(ARGV.last)
+  uri.path = "/books/#{id}"
+  http = Net::HTTP.new(uri.host, uri.port)
+  req = Net::HTTP::Delete.new(uri.path)
+  res = http.request(req)
+  if res.code != '204'
+    puts 'Something went wrong, check your server!'
+    exit 1
+  end
 end
 
 ##
