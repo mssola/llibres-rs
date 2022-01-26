@@ -147,6 +147,14 @@
     <!-- clickmetoclose -->
     <span id="msg.en.clickmetoclose">Click me to close!</span>
     <span id="msg.ca.clickmetoclose">Fes click per tancar-me!</span>
+
+    <!-- mandatory -->
+    <span id="msg.en.mandatory">Mandatory field</span>
+    <span id="msg.ca.mandatory">Camp obligatori</span>
+
+    <!-- badrate -->
+    <span id="msg.en.badrate">Rate has to be between 0 and 10 (only integers)</span>
+    <span id="msg.ca.badrate">La qualificació ha d'estar entre 0 i 10 (només enters)</span>
   </div>
 </template>
 

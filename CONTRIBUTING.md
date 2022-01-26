@@ -4,10 +4,25 @@
 
 The backend resides in the `src` directory and is written in
 [Rust](https://www.rust-lang.org/) (no special reason, I just wanted to do
-something with Rust). In order to run it, just get into that directory and run:
+something with Rust). In order to run it, you have to make sure that the
+database is ready for it. Thus, if it's your first time, you will need to instal
+`diesel` like so:
 
 ```sh
-$ diesel setup # Just for the very first time
+$ cargo install diesel_cli
+```
+
+After that, setup the database with `diesel`:
+
+```sh
+$ diesel setup
+```
+
+Notice that the database url is set on the `.env` file. Otherwise, you can pass
+an alternative `DATABASE_URL` value. Finally, you can just run the code with
+`cargo`:
+
+```sh
 $ cargon run
 ```
 

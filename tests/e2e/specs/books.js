@@ -111,4 +111,32 @@ describe("Main page", () => {
     cy.get("#status").select(`${STATUSES.read}`);
     cy.contains("td", "A new title").should("exist");
   });
+
+  it("Validates the form when creating a new book", () => {
+    cy.visit("/");
+
+    cy.get("#new-book").click();
+    cy.get("#create").should("be.disabled");
+
+    cy.get("#title").type("A new title");
+    cy.get("#create").should("be.disabled");
+
+    cy.get("#author").type("New author").type("{enter}");
+    cy.get("#create").should("be.disabled");
+
+    cy.get("#publisher").type("New publisher").type("{enter}");
+    cy.get("#create").should("be.disabled");
+
+    cy.get("#language").type("ca").type("{enter}");
+    cy.get("#create").should("not.be.disabled");
+
+    cy.get("#rate-warning").should("not.be.visible");
+    cy.get("#rate").clear().type("-1");
+    cy.get("#rate-warning").should("be.visible");
+    cy.get("#create").should("be.disabled");
+
+    cy.get("#rate").clear().type("0");
+    cy.get("#rate-warning").should("not.be.visible");
+    cy.get("#create").should("not.be.disabled");
+  });
 });

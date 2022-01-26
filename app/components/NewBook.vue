@@ -4,9 +4,12 @@
       <h1 class="text-2xl my-6">{{ i18n.t("newbook") }}</h1>
 
       <div class="field">
-        <label class="block text-gray-700 text-sm font-bold mb-1" for="title">{{
-          i18n.t("title")
-        }}</label>
+        <label class="block text-gray-700 text-sm font-bold mb-1" for="title"
+          >{{ i18n.t("title")
+          }}<small class="mx-1" :title="`${i18n.t('mandatory')}`"
+            >(*)</small
+          ></label
+        >
 
         <input
           id="title"
@@ -18,10 +21,11 @@
       </div>
 
       <div class="field">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-1"
-          for="author"
-          >{{ i18n.t("author") }}</label
+        <label class="block text-gray-700 text-sm font-bold mb-1" for="author"
+          >{{ i18n.t("author")
+          }}<small class="mx-1" :title="`${i18n.t('mandatory')}`"
+            >(*)</small
+          ></label
         >
         <v-select
           id="author"
@@ -37,7 +41,10 @@
         <label
           class="block text-gray-700 text-sm font-bold mb-1"
           for="publisher"
-          >{{ i18n.t("publisher") }}</label
+          >{{ i18n.t("publisher")
+          }}<small class="mx-1" :title="`${i18n.t('mandatory')}`"
+            >(*)</small
+          ></label
         >
         <v-select
           id="publisher"
@@ -50,10 +57,11 @@
       </div>
 
       <div class="field">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-1"
-          for="language"
-          >{{ i18n.t("language") }}</label
+        <label class="block text-gray-700 text-sm font-bold mb-1" for="language"
+          >{{ i18n.t("language")
+          }}<small class="mx-1" :title="`${i18n.t('mandatory')}`"
+            >(*)</small
+          ></label
         >
 
         <input
@@ -82,9 +90,12 @@
       </div>
 
       <div class="field">
-        <label class="block text-gray-700 text-sm font-bold mb-1" for="rate">{{
-          i18n.t("rate")
-        }}</label>
+        <label class="block text-gray-700 text-sm font-bold mb-1" for="rate"
+          >{{ i18n.t("rate")
+          }}<small class="mx-1" :title="`${i18n.t('mandatory')}`"
+            >(*)</small
+          ></label
+        >
         <input
           id="rate"
           class="rounded border border-gray-400 w-full"
@@ -94,13 +105,22 @@
           min="0"
           max="10"
         />
+
+        <p
+          v-if="rateWarning"
+          id="rate-warning"
+          class="text-red-700 text-xs italic"
+        >
+          {{ i18n.t("badrate") }}.
+        </p>
       </div>
 
       <div class="field">
-        <label
-          class="block text-gray-700 text-sm font-bold mb-1"
-          for="status"
-          >{{ i18n.t("status") }}</label
+        <label class="block text-gray-700 text-sm font-bold mb-1" for="status"
+          >{{ i18n.t("status")
+          }}<small class="mx-1" :title="`${i18n.t('mandatory')}`"
+            >(*)</small
+          ></label
         >
         <select
           id="status"
@@ -130,9 +150,12 @@
       </div>
 
       <div class="field">
-        <label class="block text-gray-700 text-sm font-bold mb-1" for="kind">{{
-          i18n.t("kind")
-        }}</label>
+        <label class="block text-gray-700 text-sm font-bold mb-1" for="kind"
+          >{{ i18n.t("kind")
+          }}<small class="mx-1" :title="`${i18n.t('mandatory')}`"
+            >(*)</small
+          ></label
+        >
         <select
           id="kind"
           class="rounded border border-gray-400 w-full"
@@ -164,6 +187,7 @@
         <button
           id="create"
           class="font-semibold py-2 px-4 rounded cursor-pointer bg-green-500 text-white border border-green-700 hover:bg-green-700 w-full mt-2 mb-2"
+          :disabled="isDisabled"
           @click="createBook"
         >
           {{ i18n.t("create") }}
@@ -215,6 +239,28 @@ export default {
       kinds: books.KINDS,
       i18n: i18n,
     };
+  },
+
+  computed: {
+    isDisabled() {
+      if (this.rateWarning) {
+        return true;
+      }
+
+      if (
+        types.isblank(this.title) ||
+        types.isblank(this.author) ||
+        types.isblank(this.publisher) ||
+        types.isblank(this.language)
+      ) {
+        return true;
+      }
+      return false;
+    },
+
+    rateWarning() {
+      return this.rate < 0 || this.rate > 10 || !Number.isInteger(this.rate);
+    },
   },
 
   methods: {
@@ -295,5 +341,9 @@ input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+
+button:disabled {
+  @apply opacity-50 cursor-not-allowed;
 }
 </style>
