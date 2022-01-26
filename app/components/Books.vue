@@ -17,7 +17,11 @@
             </div>
 
             <div>
-              <select id="status" v-model="status">
+              <select
+                id="status"
+                v-model="status"
+                class="rounded border border-gray-400 py-2 px-4 text-gray-800"
+              >
                 <option
                   v-for="(val, key) in statuses"
                   v-bind:key="val"
@@ -29,7 +33,11 @@
             </div>
 
             <div>
-              <select id="kind" v-model="kind">
+              <select
+                id="kind"
+                v-model="kind"
+                class="rounded border border-gray-400 py-2 px-4 text-gray-800"
+              >
                 <option :value="-1">{{ i18n.t("notspecified") }}</option>
                 <option
                   v-for="(val, key) in kinds"
@@ -42,7 +50,10 @@
             </div>
 
             <div>
-              <select v-model="sortingAlgorithm">
+              <select
+                v-model="sortingAlgorithm"
+                class="rounded border border-gray-400 py-2 px-4 text-gray-800"
+              >
                 <option value="0">{{ i18n.t("sortbyinterest") }}</option>
                 <option value="1">{{ i18n.t("sortbydate") }}</option>
               </select>
@@ -159,6 +170,7 @@ export default {
       books: [],
       authors: new Set(),
       locations: new Set(),
+      publishers: new Set(),
       INDEX: INDEX,
       NEW: NEW,
       statuses: ubooks.STATUSES,
@@ -188,6 +200,9 @@ export default {
         if (!types.isblank(book.location)) {
           this.locations.add(book.location.trim());
         }
+        if (!types.isblank(book.publisher)) {
+          this.publishers.add(book.publisher.trim());
+        }
       });
 
       this.books = resp.data;
@@ -199,6 +214,7 @@ export default {
       return {
         authors: Array.from(this.authors),
         locations: Array.from(this.locations),
+        publishers: Array.from(this.publishers),
       };
     },
   },
@@ -340,7 +356,7 @@ export default {
           if (error.response.status === 400) {
             this.flash(
               "error",
-              `${i18n.t("error")}: ${error.response.data.message}.`
+              `${i18n.t("bad")}: ${error.response.data.message}.`
             );
           } else {
             this.flash("error", `${i18n.t("error")}!`);
@@ -388,8 +404,5 @@ ul {
 li {
   display: inline-block;
   margin: 0 10px;
-}
-a {
-  color: #42b983;
 }
 </style>

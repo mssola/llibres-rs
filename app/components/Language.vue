@@ -96,9 +96,21 @@
     <span id="msg.en.status">Status</span>
     <span id="msg.ca.status">Estat</span>
 
+    <!-- boughtat -->
+    <span id="msg.en.boughtat">Bought at</span>
+    <span id="msg.ca.boughtat">Comprat el</span>
+
+    <!-- notes -->
+    <span id="msg.en.notes">Notes</span>
+    <span id="msg.ca.notes">Notes</span>
+
     <!-- new -->
     <span id="msg.en.new">New</span>
     <span id="msg.ca.new">Nou</span>
+
+    <!-- create -->
+    <span id="msg.en.create">Create</span>
+    <span id="msg.ca.create">Crea</span>
 
     <!-- update -->
     <span id="msg.en.update">Update</span>
@@ -121,8 +133,16 @@
     <span id="msg.ca.confirm">Estàs segur d'això?</span>
 
     <!-- error -->
-    <span id="msg.en.error">Something went wrong</span>
-    <span id="msg.ca.error">Alguna cosa ha anat malament</span>
+    <span id="msg.en.error">Something went wrong!</span>
+    <span id="msg.ca.error">Alguna cosa ha anat malament!</span>
+
+    <!-- bad -->
+    <span id="msg.en.bad">Bad request</span>
+    <span id="msg.ca.bad">Petició incorrecta</span>
+
+    <!-- newbook -->
+    <span id="msg.en.newbook">New book</span>
+    <span id="msg.ca.newbook">Llibre nou</span>
   </div>
 </template>
 

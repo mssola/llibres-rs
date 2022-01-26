@@ -102,6 +102,8 @@ describe("Main page", () => {
     cy.get("#kind").select(`${KINDS.poetry}`);
     cy.get("#location").type("Casa").type("{enter}");
     cy.get("#author").type("New author").type("{enter}");
+    cy.get("#publisher").type("New publisher").type("{enter}");
+    cy.get("#language").type("ca").type("{enter}");
     cy.get("#date").click();
     cy.get("#create").click();
 
