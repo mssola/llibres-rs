@@ -143,6 +143,10 @@
     <!-- newbook -->
     <span id="msg.en.newbook">New book</span>
     <span id="msg.ca.newbook">Llibre nou</span>
+
+    <!-- clickmetoclose -->
+    <span id="msg.en.clickmetoclose">Click me to close!</span>
+    <span id="msg.ca.clickmetoclose">Fes click per tancar-me!</span>
   </div>
 </template>
 

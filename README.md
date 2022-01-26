@@ -10,7 +10,7 @@ A simple web application to manage the books I have or want.
 ## To do
 
 - [ ] UI
-- [ ] Improve NewBook component
+- [x] Improve NewBook component
 - [x] Tests
 - [x] Github shenanigans
 

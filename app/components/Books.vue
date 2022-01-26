@@ -225,6 +225,7 @@ export default {
     },
 
     created(book) {
+      this.flash("", "");
       this.books.push(book);
       this.page = INDEX;
     },
@@ -348,6 +349,7 @@ export default {
             }
           }
 
+          this.flash("", "");
           this.isModalVisible = false;
         })
         .catch((error) => {
@@ -381,6 +383,7 @@ export default {
               this.books.splice(idx, 1);
             }
 
+            this.flash("", "");
             this.isModalVisible = false;
           })
           .catch(() => {

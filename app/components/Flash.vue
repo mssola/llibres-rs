@@ -1,10 +1,18 @@
 <template>
-  <div class="flash" v-bind:class="flashClass">
-    {{ displayMessage }}
+  <div class="flex justify-center">
+    <div
+      class="flash py-2 px-4 rounded cursor-pointer"
+      :title="`${i18n.t('clickmetoclose')}...`"
+      v-bind:class="flashClass"
+    >
+      {{ displayMessage }}
+    </div>
   </div>
 </template>
 
 <script>
+import i18n from "../utils/i18n";
+
 export default {
   props: {
     kind: {
@@ -15,6 +23,12 @@ export default {
       type: String,
       required: true,
     },
+  },
+
+  data() {
+    return {
+      i18n: i18n,
+    };
   },
 
   computed: {
@@ -33,4 +47,12 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.flash-info {
+  @apply bg-white text-green-800 border border-green-700;
+}
+
+.flash-error {
+  @apply bg-white text-red-800 border border-red-700;
+}
+</style>
