@@ -1,0 +1,8 @@
+# Undocumented option from `cargo-audit`, you can have this file where we can
+# ignore some rustsecs that we know are not affecting us.
+
+[advisories]
+
+# Ignore some rustsecs affecting `chrono` which do not apply on this project
+# because we are not using the affected functions.
+ignore = ["RUSTSEC-2020-0071", "RUSTSEC-2020-0159"]
