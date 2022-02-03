@@ -1,0 +1,35 @@
+---
+
+version: '3.3'
+services:
+  db:
+    image: postgres:13.5-alpine
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_DB: llibres-prod
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    restart: unless-stopped
+
+  web:
+    image: llibres:main
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    volumes:
+      - ./public:/public
+    environment:
+      DATABASE_URL_FILE: /run/secrets/db_url
+    secrets:
+      - db_url
+    restart: unless-stopped
+
+secrets:
+  db_password:
+    file: ./secrets/db_password.txt
+  db_url:
+    file: ./secrets/db_url.txt

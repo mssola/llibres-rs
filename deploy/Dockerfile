@@ -23,12 +23,14 @@ RUN yarn build
 ##
 # Combining all of the above.
 
-FROM alpine:3
+FROM debian:stable-slim
 
-RUN mkdir -p /srv/llibres/bin /srv/llibres/public
+WORKDIR /srv/llibres
+
+RUN apt-get update && apt-get -y install libpq5 && apt-get clean && mkdir -p /srv/llibres/bin /srv/llibres/public
 COPY --from=backend /usr/local/cargo/bin/llibres /srv/llibres/bin/llibres
+COPY --from=backend /usr/src/llibres/deploy/init /srv/llibres/bin/init
 COPY --from=frontend /usr/src/llibres/dist /srv/llibres/public
 
 EXPOSE 8080
-
-CMD ["/srv/llibres/bin/llibres"]
+CMD ["/bin/bash", "/srv/llibres/bin/init"]

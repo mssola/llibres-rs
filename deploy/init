@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -e
+
+# Nuke everything there was before and copy files over again.
+rm -rf /public/*
+mkdir -p /public
+mv -v /srv/llibres/public/* /public/
+
+# Run the binary where it's expected to reside.
+/srv/llibres/bin/llibres

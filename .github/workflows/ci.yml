@@ -127,7 +127,7 @@ jobs:
 
       - name: Build production Docker image
         run: |
-          docker build -f Dockerfile --tag ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_USERNAME }}/llibres:main .
+          docker build -f deploy/Dockerfile --tag ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_USERNAME }}/llibres:main .
           docker save ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_USERNAME }}/llibres:main | gzip > ci.tar.gz
 
       - name: Backup Docker image
@@ -169,3 +169,15 @@ jobs:
           docker login -u "${{ secrets.REGISTRY_USERNAME }}" -p "${{ secrets.REGISTRY_PASSWORD }}" ${{ secrets.REGISTRY_HOST }}
           docker push ${{ secrets.REGISTRY_HOST }}/${{ secrets.REGISTRY_USERNAME }}/llibres:main
           docker logout ${{ secrets.REGISTRY_HOST }}
+
+      # The infrastructure of the remote server provides the `llibres-restart`
+      # binary which performs all the needed dancing after a new image has been
+      # pushed. This binary is maintained into a private repository that I have.
+      - name: Restart service with the new code
+        uses: garygrossgarten/github-action-ssh@release
+        with:
+          command: llibres-restart
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          passphrase: ${{ secrets.REMOTE_PASSPHRASE }}
+          privateKey: ${{ secrets.PRIVATE_KEY}}

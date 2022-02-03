@@ -17,3 +17,8 @@ pnpm-debug.log*
 tests/fixtures/seed.yml
 tests/e2e/screenshots/*
 tests/e2e/videos/*
+
+# Deployment stuff
+deploy/secrets
+deploy/data
+deploy/public
